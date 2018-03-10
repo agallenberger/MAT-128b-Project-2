@@ -82,7 +82,7 @@ for i = 1:n*n
    axis square tight off; 
 end 
 
-% Visualize the average train digits   
+%% Plot the average train digits   
 T(1,:) = mean(train0); 
 T(2,:) = mean(train1); 
 T(3,:) = mean(train2); 
@@ -94,6 +94,7 @@ T(8,:) = mean(train7);
 T(9,:) = mean(train8); 
 T(10,:) = mean(train9); 
 
+digitImage_mean = zeros(28,28,10);
 for i = 1:10 
     digitImage_mean(:,:,i) = reshape(T(i,:),28,28);
 end 
