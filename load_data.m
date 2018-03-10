@@ -1,3 +1,4 @@
+%% load_data.m
 %MAT 128b Project 2
 %Load MNIST data of handwritten digits
 clear; clc; close all;
