@@ -71,12 +71,11 @@ elseif digit == 9
 end
     
 %Plot the desired digit
-figure(1) 
-n = 6; 
-for i = 1:n*n 
+f1 = figure; 
+for i = 1:3
    digit = TestTrainDigit(i,:);
    digitImage = reshape(digit,28,28);
-   subplot(n,n,i); 
+   subplot(1,3,i); 
    image(rot90(flipud(digitImage),-1)); 
    colormap(gray(256)); 
    axis square tight off; 
