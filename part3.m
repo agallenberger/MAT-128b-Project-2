@@ -1,6 +1,6 @@
 %% part3.m
 %MAT 128b Project 2
-%Load MNIST data of handwritten digits
+%Create a single neuron
 clear; clc; close all;
 
 %% Create neuron

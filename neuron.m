@@ -1,6 +1,6 @@
 %% neuron.m
 %MAT 128b Project 2
-%neuron function
+%neuron function from part3.m
 
 function OUT = neuron(input, weight)
 
