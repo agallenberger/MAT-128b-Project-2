@@ -4,7 +4,7 @@ clear; clc; close all;
 load mnistdata;
 
 %% Select digit
-digit = 8;
+digit = 5;
 train = 1; %if 0, will use test digit instead
 
 %% Visualize a selected train/test digit
