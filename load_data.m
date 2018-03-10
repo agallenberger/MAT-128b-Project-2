@@ -73,10 +73,9 @@ end
 %Plot the desired digit
 f1 = figure; 
 for i = 1:3
-   digit = TestTrainDigit(i,:);
-   digitImage = reshape(digit,28,28);
+   digitImage = reshape(TestTrainDigit(i,:), 28, 28);
    subplot(1,3,i); 
-   image(rot90(flipud(digitImage),-1)); 
+   image(rot90(flipud(digitImage), -1)); 
    colormap(gray(256)); 
    axis square tight off; 
 end 
@@ -98,7 +97,7 @@ for i = 1:10
     digitImage_mean(:,:,i) = reshape(T(i,:),28,28);
 end 
 
-figure(2) 
+f2 = figure; 
 for i = 1:10 
     subplot(2,5,i) 
     image(rot90(flipud(digitImage_mean(:,:,i)),-1)); 
