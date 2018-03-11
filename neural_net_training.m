@@ -7,7 +7,7 @@ load mnistdata;
 %% Initialize neural net parameters
 digit = 5;          %select handwritten digit [0,9]
 train = 1;          %if 0, will use test digit instead
-layers = 1;         %number of hidden layers
+layers = 1;         %number of hidden layers [0,3]
 trainingRate = .05; %within the interval [0.1, 0.01]
 
 %% Load INPUT and TARGET data
