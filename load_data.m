@@ -9,7 +9,7 @@ digit = 5;
 train = 1; %if 0, will use test digit instead
 
 %% Visualize a selected train/test digit
-TestTrainDigit = getMNISTdata(digit, train);
+TestTrainDigit = getMNIST(digit, train);
     
 %Plot the desired digit
 f1 = figure; 

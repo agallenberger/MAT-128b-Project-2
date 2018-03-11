@@ -21,7 +21,7 @@ T(7,:) = mean(train6);
 T(8,:) = mean(train7); 
 T(9,:) = mean(train8); 
 T(10,:) = mean(train9);
-input = double(logical(getMNISTdata(digit,train)));
+input = double(logical(getMNIST(digit,train)));
 n = length(input(1,:));
 
 %% Create neural network using neuron.m
