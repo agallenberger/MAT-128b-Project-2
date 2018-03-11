@@ -7,6 +7,7 @@ load mnistdata;
 %% Initialize neural net parameters
 digit = 5;          %select handwritten digit [0,9]
 train = 1;          %if 0, will use test digit instead
+layers = 1;         %number of hidden layers
 trainingRate = .05; %within the interval [0.1, 0.01]
 
 %% Load INPUT and TARGET data
@@ -33,7 +34,7 @@ for i = 1:n
 end
 
 %% Train the neural net on the desired digit
-for i = 1:n %Layer for each
+for i = 1:max(size(INPUT))
     
     %--------------------------------%
     OUT = INPUT(i,:);                % INPUT Layer
@@ -46,13 +47,13 @@ for i = 1:n %Layer for each
     end                              %
     %--------------------------------%
     
-    %--------------------------------%
-    ERROR = abs(TARGET - OUT);       % OUTPUT Layer
-    deltaQK = OUT.*(1 - OUT).*ERROR; %
-    %--------------------------------%
+    %----------------------------------------------%
+    ERROR = abs(TARGET(digit + 1, :) - OUT);       % OUTPUT Layer
+    deltaQK = OUT.*(1 - OUT).*ERROR;               %
+    %----------------------------------------------%
     
     %Reverse pass error propagation
-    for j = n:-1:1 %loop through layers backwards
+    for j = layers:-1:1 %loop through layers backwards
         for k = 1:n %loop through each neruon in the layer
             %W(j,k) = ...
         end
@@ -64,4 +65,5 @@ end
 %% Save weight matrix in CSV text file
 filename = ['W_digit' num2str(digit) '.txt'];
 csvwrite(filename, W);
+disp(['Training complete, weight data written to ' 'W_digit' num2str(digit) '.txt'])
 
