@@ -73,7 +73,7 @@ elseif digit == 9
 end
 
 %% Create neural network using neuron.m
-input = double(input);
+input = double(logical(input));
 n = length(input(1,:)); %Length of each digit sample
 W = rand(n,n);
 OUT = zeros(n,1);
@@ -82,14 +82,9 @@ for i = 1:n
     W(i,:) = W(i,:)./sum(W(i,:));
 end
 
-
-for i = 1:n;
-    
-    OUT(i) = neuron(input(1,:), W(i,:));
-    
-    
-    
-    
+for k = 1:10
+    for i = 1:n;
+        OUT(i) = neuron(input(1,:), W(i,:));
+    end
+    fprintf('digit %1.0f -> average OUT = %1.7f', k, mean(OUT));
 end
-image(reshape(OUT,28,28))
-
