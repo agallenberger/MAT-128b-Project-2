@@ -7,7 +7,8 @@ load mnistdata;
 %% Initialize neural net parameters
 digit = 5;
 train = 1; %if 0, will use test digit instead
-layers = 1; %number of hidden layers
+layers = 100; %number of hidden layers
+trainingRate = .05; %within the interval [0.1, 0.01]
 
 %% Load INPUT and TARGET data
 T(1,:) = mean(train0); 
@@ -33,9 +34,19 @@ end
 %Train neural net on each digit
 OUT = zeros(n,1);
 ERROR = zeros(n,1);
+delta = zeros(n,1);
+fprintf('Digit = %1.0f\n', digit);
 for j = 1:layers
     for i = 1:n
         OUT(i) = neuron(input(1,:), W(i,:));
     end
-    fprintf('digit %1.0f, pass #%1.0f -> average OUT = %1.7f\n', digit, j, mean(OUT)); 
+    ERROR = abs(OUT - T(digit + 1, :)');
+    delta = OUT.*(1-OUT).*ERROR;
+    W(i,:) = trainingRate.*delta.*OUT;
+    fprintf('  pass #%1.0f, avg ERROR = %1.7f\n', j, mean(ERROR));
+    input = OUT';
 end
+
+%% Save weight matrix in CSV text file
+filename = ['W_digit_' num2str(digit) '.txt'];
+csvwrite(filename, W);
