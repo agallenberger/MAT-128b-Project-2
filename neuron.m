@@ -4,7 +4,7 @@
 
 function OUT = neuron(input, weight)
 
-    NET = sum(input.*weight)
+    NET = sum(input.*weight);
     OUT = 1/(1+(exp(-NET)));
 
 end
