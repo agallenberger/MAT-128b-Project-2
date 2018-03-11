@@ -1,8 +1,8 @@
-%% getMNISTdata.m
+%% getMNIST.m
 %MAT 128b Project 2
 %function to retrieve MNIST data
 
-function data = getMNISTdata(digit, train)
+function data = getMNIST(digit, train)
 
     load mnistdata;
     if digit == 0

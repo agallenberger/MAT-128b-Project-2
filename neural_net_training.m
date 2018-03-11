@@ -12,7 +12,7 @@ trainingRate = .05; %within the interval [0.1, 0.01]
 
 %% Load INPUT and TARGET data
 TARGET = getTARGET(digit);
-INPUT = double(logical(getMNISTdata(digit, train)));
+INPUT = double(logical(getMNIST(digit, train)));
 n = length(INPUT(1,:));
 
 %% Initialize OUT function and weight matrix
