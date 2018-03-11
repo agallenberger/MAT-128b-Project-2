@@ -27,9 +27,9 @@ n = length(input(1,:));
 %% Create neural network using neuron.m
 %Part 5 - initialize weight matrix. Each row sums to 1.
 W = rand(n,n);
-% for i = 1:n
-%     W(i,:) = W(i,:)./sum(W(i,:));
-% end
+for i = 1:n
+    W(i,:) = W(i,:)./sum(W(i,:));
+end
 
 %Train neural net on each digit
 OUT = zeros(n,1);
