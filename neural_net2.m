@@ -1,4 +1,4 @@
-%% neural_net.m
+%% neural_net2.m
 %MAT 128b Project 2 - Part 4, 5, 6, 7...
 %Create neural net
 clear; clc; close all;
@@ -24,8 +24,8 @@ T(10,:) = mean(train9);
 input = double(logical(getMNISTdata(digit,train)));
 n = length(input(1,:));
 
-%% Initialize output function
-F = @(NET) 1./(1+(exp(-NET)));
-
+%% Initialize OUT and NET functions
+F = @(NET) 1./(1+exp(-NET));
+NET = @(input, weight) sum(input.*weight);
 
 
