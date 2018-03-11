@@ -1,4 +1,4 @@
-%% neural_net2.m
+%% neural_net_training.m
 %MAT 128b Project 2 - Part 4, 5, 6
 %Train the neural net
 clear; clc; close all;
