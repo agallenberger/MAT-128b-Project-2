@@ -1,6 +1,6 @@
 %% load_data.m
-%MAT 128b Project 2
-%Load MNIST data of handwritten digits
+%MAT 128b Project 2 - Part 1 & 2
+%Load MNIST data & Plot it
 clear; clc; close all;
 load mnistdata;
 

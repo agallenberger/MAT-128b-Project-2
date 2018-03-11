@@ -1,6 +1,6 @@
 %% neural_net.m
 %MAT 128b Project 2
-%Load MNIST data of handwritten digits
+%Create neural net
 clear; clc; close all;
 load mnistdata;
 
