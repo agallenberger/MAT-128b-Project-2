@@ -7,16 +7,21 @@ load mnistdata;
 %% Initialize neural net parameters
 digit = 5;               %select handwritten digit [0,9]
 trainORtest = 1;         %boolean, 1 -> train, 0 -> test
-layers = 1;              %number of hidden layers
+layers = 1;              %number of hidden layers [1,inf)
 neurons_hidden = 4;      %number of neurons per hidden layer
 trainingRate = .05;      %within the interval [0.1, 0.01]
 
 %Things you can't change
 neurons_input = 784;     %number of neurons in the input layer
-neurons_output = 784;    %number of neurons in the output layer
+neurons_output = 10;     %number of neurons in the output layer
 
 %% Load INPUT and TARGET data
-TARGET = getTARGET(digit);
+TARGET = zeros(1,neurons_output);
+for i = 1:neurons_output
+    if i-1 == digit
+        TARGET(i) = 1;
+    end
+end
 INPUT = double(logical(getMNIST(digit, trainORtest)));
 
 %% Initialize OUT function and weight matrix
@@ -25,77 +30,55 @@ F = @(NET) 1./(1+exp(-NET));
 %Part 5 - Weight matrix for INPUT-HIDDEN, HIDDEN-HIDDEN, and HIDDEN-OUTPUT
 %       - There will only be 1 INPUT-HIDDEN and HIDDEN-OUTPUT matrix, but multiple 
 %         HIDDEN-HIDDEN matrices depending on the number of hidden layers
-%       - Each column sums to 1
 %       - W(i,j) is the weight from neuron_i to neuron_j
-%       - The HIDDEN-HIDDEN matrix will be empty unless 'layers > 1'
 
-W_input = rand(neurons_input, neurons_hidden);
-W_hidden = rand(neurons_hidden, neurons_hidden, layers-1);
-W_output = rand(neurons_hidden, neurons_output);
-for i = 1:neurons_hidden
-    W_input(:,i) = W_input(:,i)./sum(W_input(:,i));
-    for j = 1:layers-1
-        W_hidden(:,i,j) = W_hidden(:,i,j)./sum(W_hidden(:,i,j));
-    end
+W{1} = rand(neurons_input, neurons_hidden); %INPUT -> HIDDEN
+for i = 1:layers-1
+    W{i+1} = rand(neurons_hidden, neurons_hidden); %HIDDEN -> HIDDEN
 end
-for i = 1:neurons_output
-   W_output(:,i) =  W_output(:,i)./sum(W_output(:,i));
-end
+W{end+1} = rand(neurons_hidden, neurons_output); %HIDDEN -> OUTPUT
+
 
 %% Train the neural net on the desired digit
 for i = 1:max(size(INPUT))
     
-    %Case for no HIDDEN layers
-    if layers == 0
-        %INPUT to OUTPUT
-        NET = INPUT(i,:)*W_input;
+    %Forward Pass
+    OUT = INPUT(i,:);
+    for j = 1:layers+1
+        NET = OUT*W{j};
         OUT = F(NET);
-        
-        ERROR = abs(TARGET - OUT);
-        deltaQK = OUT.*(1 - OUT).*ERROR;
-        
-        %Reverse Pass
-        % ...
+        OUT_data{j} = OUT;
+    end
+    
+    %Calculate error at the OUTPUT layer
+    ERROR = abs(TARGET - OUT_data{end});
+    D_output = OUT_data{end}.*(ones(size(OUT_data{end})) - OUT_data{end}).*ERROR;
 
-    %Cse for more than 0 HIDDEN layers
-    else
-        %INPUT to HIDDEN
-        NET = INPUT(i,:)*W_input;
-        OUT = F(NET);
-        
-        OUT_data{1} = OUT;
-        
-        %HIDDEN to HIDDEN (only loops if there are more than 1 layer)
-        for j = 1:layers-1
-            NET = OUT*W_hidden(:,:,j);
-            OUT = F(NET);
-            OUT_data{j+1} = OUT;
+
+    %Reverse Pass on HIDDEN -> OUTPUT weights
+    w_change_output = zeros(neurons_hidden, neurons_output);
+    for k = 1:neurons_hidden
+        for j = 1:neurons_output
+            w_change_output(k,j) = trainingRate*D_output(j)*OUT_data{end}(k);
         end
-        
-        %HIDDEN to OUTPUT
-        NET = OUT*W_output;
-        OUT = F(NET);
-        
-        ERROR = abs(TARGET - OUT);
-        D_output = OUT.*(1 - OUT).*ERROR;
-        
-        
-        %Reverse Pass
-        for j = layers:-1:1
-           D(j,:) = D_output*W_output'.*(OUT_data{j}.*(ones(size(OUT_data{j})) - OUT_data{j}));
-           %idk how to feed this back into W
-        end
-        
-        if mod(i,100) == 0
-            fprintf('Pass #%1.0f, avg error = %1.7f\n', i, mean(ERROR))
-        end
+    end
+    W{end} = W{end} + w_change_output;
+
+
+    %Reverse Pass on HIDDEN -> HIDDEN weights
+    w_change_hidden = zeros(neurons_hidden, neurons_hidden);
+
+    
+
+    if mod(i,100) == 0
+        fprintf('Pass #%1.0f, avg error = %1.7f\n', i, mean(ERROR))
     end
     
 end
 
 %% Save weight matrices in .mat files
 filename = ['W_' num2str(digit) '.mat'];
-save(filename, 'W_input', 'W_hidden', 'W_output')
+save(filename, 'W')
 
 disp('--------------- TRAINING COMPLETE ---------------')
 disp('Neural Net Parameters:')
