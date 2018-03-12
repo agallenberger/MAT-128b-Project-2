@@ -70,17 +70,11 @@ for i = 1:max(size(INPUT))
 end
 
 %% Save weight matrices in .mat files
-filename_input = ['W_input_' num2str(digit) '.mat'];
-filename_hidden = ['W_hidden_' num2str(digit) '.mat'];
-filename_output = ['W_otuput_' num2str(digit) '.mat'];
-save(filename_input, 'W_input');
-save(filename_hidden, 'W_hidden');
-save(filename_output, 'W_output');
+filename = ['W_' num2str(digit) '.mat'];
+save(filename, 'W_input', 'W_hidden', 'W_output')
 
-disp('Training complete, weight data written to: ')
-disp(filename_input)
-disp(filename_hidden)
-disp(filename_output)
+disp(['Training complete, weight data written to ' filename])
+
 
 
 
