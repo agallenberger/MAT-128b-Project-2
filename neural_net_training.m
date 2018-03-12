@@ -5,23 +5,38 @@ clear; clc; close all;
 load mnistdata;
 
 %% Initialize neural net parameters
-digit = 5;          %select handwritten digit [0,9]
-train = 1;          %if 0, will use test digit instead
-layers = 1;         %number of hidden layers [0,3]
-trainingRate = .05; %within the interval [0.1, 0.01]
+digit = 5;               %select handwritten digit [0,9]
+trainORtest = 1;         %boolean, 1 -> train, 0 -> test
+layers = 1;              %number of hidden layers
+neurons_input = 784;     %number of neurons in the input layer
+neurons_hidden = 784;    %number of neurons per hidden layer
+neurons_output = 784;    %number of neurons in the output layer
+trainingRate = .05;      %within the interval [0.1, 0.01]
 
 %% Load INPUT and TARGET data
 TARGET = getTARGET(digit);
-INPUT = double(logical(getMNIST(digit, train)));
+INPUT = double(logical(getMNIST(digit, trainORtest)));
 n = length(INPUT(1,:));
 
 %% Initialize OUT function and weight matrix
 F = @(NET) 1./(1+exp(-NET));
 
-%Part 5 - initialize weight matrix. Each row sums to 1.
-W = rand(n,n);
-for i = 1:n
-    W(i,:) = W(i,:)./sum(W(i,:));
+%Part 5 - Weight matrix for INPUT-HIDDEN, HIDDEN-HIDDEN, and HIDDEN-OUTPUT
+%       - There will only be 1 INPUT-HIDDEN and HIDDEN-OUTPUT matrix, but multiple 
+%         HIDDEN-HIDDEN matrices depending on the number of hidden layers
+%       - Each column sums to 1
+%       - W(i,j) is the weight from neuron_i to neuron_j
+W_input = rand(neurons_input, neurons_hidden);
+W_hidden = rand(neurons_hidden, neurons_hidden, layers);
+W_output = rand(neurons_hidden, neurons_output);
+for i = 1:neurons_hidden
+    W_input(:,i) = W_input(:,i)./sum(W_input(:,i));
+    for j = 1:layers
+        W_hidden(:,i,j) = W_hidden(:,i,j)./sum(W_hidden(:,i,j));
+    end
+end
+for i = 1:neurons_output
+   W_output(:,i) =  W_output(:,i)./sum(W_output(:,i));
 end
 
 %% Train the neural net on the desired digit
@@ -33,7 +48,7 @@ for i = 1:max(size(INPUT))
     
     %--------------------------------%
     for j = 1:layers                 %
-        NET = OUT*W;                 % HIDDEN Layers
+        NET = OUT*W_input;                 % HIDDEN Layers
         OUT = F(NET);                %
     end                              %
     %--------------------------------%
@@ -52,9 +67,21 @@ for i = 1:max(size(INPUT))
     
 end
 
-
 %% Save weight matrix in CSV text file
-filename = ['W_digit' num2str(digit) '.txt'];
-csvwrite(filename, W);
-disp(['Training complete, weight data written to ' 'W_digit' num2str(digit) '.txt'])
+filename_input = ['W_input_' num2str(digit) '.mat'];
+filename_hidden = ['W_hidden_' num2str(digit) '.mat'];
+filename_output = ['W_otuput_' num2str(digit) '.mat'];
+save(filename_input, 'W_input');
+save(filename_hidden, 'W_hidden');
+save(filename_output, 'W_output');
+
+disp('Training complete, weight data written to: ')
+disp(filename_input)
+disp(filename_hidden)
+disp(filename_output)
+
+
+
+
+
 
