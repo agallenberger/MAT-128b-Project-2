@@ -62,27 +62,35 @@ for i = 1:max(size(INPUT))
         %INPUT to HIDDEN
         NET = INPUT(i,:)*W_input;
         OUT = F(NET);
-        OUT_input = OUT;
+        
+        OUT_data = zeros(layers+1, length(OUT));
+        OUT_data(1,:) = OUT;
         
         %HIDDEN to HIDDEN (only loops if there are more than 1 layer)
-        OUT_hidden = zeros(layers-1, length(OUT));
         for j = 1:layers-1
             NET = OUT*W_hidden(:,:,j);
             OUT = F(NET);
-            OUT_hidden(j,:) = OUT;
+            OUT_data(j+1,:) = OUT;
         end
         
         %HIDDEN to OUTPUT
         NET = OUT*W_output;
         OUT = F(NET);
+        OUT_data(layers+1,:) = OUT;
         
         ERROR = abs(TARGET - OUT);
-        deltaQK = OUT.*(1 - OUT).*ERROR;
+        D_output = OUT.*(1 - OUT).*ERROR;
         
         
         %Reverse Pass
-        % ...
+        for j = layers:-1:1
+           D(j,:) = D_output*W_output'.*(OUT_data(j,:).*(ones(size(OUT)) - OUT_data(j,:)));
+           %idk how to feed this back into W
+        end
         
+        if mod(i,100) == 0
+            fprintf('Pass #%1.0f, avg error = %1.7f\n', i, mean(ERROR))
+        end
     end
     
 end
