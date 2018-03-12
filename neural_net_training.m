@@ -18,7 +18,6 @@ neurons_output = 784;    %number of neurons in the output layer
 %% Load INPUT and TARGET data
 TARGET = getTARGET(digit);
 INPUT = double(logical(getMNIST(digit, trainORtest)));
-n = length(INPUT(1,:));
 
 %% Initialize OUT function and weight matrix
 F = @(NET) 1./(1+exp(-NET));
@@ -68,7 +67,6 @@ for i = 1:max(size(INPUT))
         for j = 1:layers-1
             NET = OUT*W_hidden(:,:,j);
             OUT = F(NET);
-            disp('x')
         end
         
         %HIDDEN to OUTPUT
