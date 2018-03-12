@@ -41,33 +41,35 @@ end
 
 %% Train the neural net on the desired digit
 for i = 1:max(size(INPUT))
-    
-    %--------------------------------%
-    OUT = INPUT(i,:);                % INPUT Layer
-    %--------------------------------%
-    
-    %--------------------------------%
-    for j = 1:layers                 %
-        NET = OUT*W_input;                 % HIDDEN Layers
-        OUT = F(NET);                %
-    end                              %
-    %--------------------------------%
-    
-    %----------------------------------------------%
-    ERROR = abs(TARGET - OUT);       % OUTPUT Layer
-    deltaQK = OUT.*(1 - OUT).*ERROR;               %
-    %----------------------------------------------%
-    
-    %Reverse pass error propagation
-    for j = layers:-1:1 %loop through layers backwards
-        for k = 1:n %loop through each neruon in the layer
-            %W(j,k) = ...
-        end
-    end
+ 
+%     FIX THIS
+%
+%     %--------------------------------%
+%     OUT = INPUT(i,:);                % INPUT Layer
+%     %--------------------------------%
+%     
+%     %--------------------------------%
+%     for j = 1:layers                 %
+%         NET = OUT*W_input;                 % HIDDEN Layers
+%         OUT = F(NET);                %
+%     end                              %
+%     %--------------------------------%
+%     
+%     %----------------------------------------------%
+%     ERROR = abs(TARGET - OUT);       % OUTPUT Layer
+%     deltaQK = OUT.*(1 - OUT).*ERROR;               %
+%     %----------------------------------------------%
+%     
+%     %Reverse pass error propagation
+%     for j = layers:-1:1 %loop through layers backwards
+%         for k = 1:n %loop through each neruon in the layer
+%             %W(j,k) = ...
+%         end
+%     end
     
 end
 
-%% Save weight matrix in CSV text file
+%% Save weight matrices in .mat files
 filename_input = ['W_input_' num2str(digit) '.mat'];
 filename_hidden = ['W_hidden_' num2str(digit) '.mat'];
 filename_output = ['W_otuput_' num2str(digit) '.mat'];
