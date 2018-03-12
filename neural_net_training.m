@@ -6,12 +6,14 @@ load mnistdata;
 
 %% Initialize neural net parameters
 digit = 5;               %select handwritten digit [0,9]
-trainORtest = 1;         %boolean, 1 -> train, 0 -> test
+trainORtest = 4;         %boolean, 1 -> train, 0 -> test
 layers = 1;              %number of hidden layers
-neurons_input = 784;     %number of neurons in the input layer
 neurons_hidden = 784;    %number of neurons per hidden layer
-neurons_output = 784;    %number of neurons in the output layer
 trainingRate = .05;      %within the interval [0.1, 0.01]
+
+%Things you can't change
+neurons_input = 784;     %number of neurons in the input layer
+neurons_output = 784;    %number of neurons in the output layer
 
 %% Load INPUT and TARGET data
 TARGET = getTARGET(digit);
@@ -35,7 +37,6 @@ for i = 1:neurons_hidden
     W_input(:,i) = W_input(:,i)./sum(W_input(:,i));
     for j = 1:layers-1
         W_hidden(:,i,j) = W_hidden(:,i,j)./sum(W_hidden(:,i,j));
-        disp('x')
     end
 end
 for i = 1:neurons_output
@@ -67,6 +68,7 @@ for i = 1:max(size(INPUT))
         for j = 1:layers-1
             NET = OUT*W_hidden(:,:,j);
             OUT = F(NET);
+            disp('x')
         end
         
         %HIDDEN to OUTPUT
