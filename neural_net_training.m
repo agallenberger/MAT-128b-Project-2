@@ -62,11 +62,14 @@ for i = 1:max(size(INPUT))
         %INPUT to HIDDEN
         NET = INPUT(i,:)*W_input;
         OUT = F(NET);
+        OUT_input = OUT;
         
         %HIDDEN to HIDDEN (only loops if there are more than 1 layer)
+        OUT_hidden = zeros(layers-1, length(OUT));
         for j = 1:layers-1
             NET = OUT*W_hidden(:,:,j);
             OUT = F(NET);
+            OUT_hidden(j,:) = OUT;
         end
         
         %HIDDEN to OUTPUT
