@@ -1,10 +1,10 @@
-%% neural_net_training.m
+% neural_net_training.m
 %MAT 128b Project 2 - Part 4, 5, 6
 %Train the neural net
 clear; clc; close all;
 load mnistdata;
 
-%% Initialize neural net parameters
+% Initialize neural net parameters
 digit = 5;               %select handwritten digit [0,9]
 trainORtest = 1;         %boolean, 1 -> train, 0 -> test
 layers = 1;              %number of hidden layers
@@ -13,12 +13,12 @@ neurons_hidden = 784;    %number of neurons per hidden layer
 neurons_output = 784;    %number of neurons in the output layer
 trainingRate = .05;      %within the interval [0.1, 0.01]
 
-%% Load INPUT and TARGET data
+% Load INPUT and TARGET data
 TARGET = getTARGET(digit);
 INPUT = double(logical(getMNIST(digit, trainORtest)));
 n = length(INPUT(1,:));
 
-%% Initialize OUT function and weight matrix
+% Initialize OUT function and weight matrix
 F = @(NET) 1./(1+exp(-NET));
 
 %Part 5 - Weight matrix for INPUT-HIDDEN, HIDDEN-HIDDEN, and HIDDEN-OUTPUT
@@ -39,26 +39,30 @@ for i = 1:neurons_output
    W_output(:,i) =  W_output(:,i)./sum(W_output(:,i));
 end
 
-%% Train the neural net on the desired digit
+% Train the neural net on the desired digit
 for i = 1:max(size(INPUT))
- 
+
 %     FIX THIS
 %
 %     %--------------------------------%
 %     OUT = INPUT(i,:);                % INPUT Layer
+%     NET = OUT*W_input;               %
+%     OUT = F(NET);                    %
 %     %--------------------------------%
 %     
 %     %--------------------------------%
 %     for j = 1:layers                 %
-%         NET = OUT*W_input;                 % HIDDEN Layers
+%         NET = OUT*W_hidden(:,:,j);   % HIDDEN Layers
 %         OUT = F(NET);                %
 %     end                              %
 %     %--------------------------------%
 %     
-%     %----------------------------------------------%
-%     ERROR = abs(TARGET - OUT);       % OUTPUT Layer
-%     deltaQK = OUT.*(1 - OUT).*ERROR;               %
-%     %----------------------------------------------%
+%     %--------------------------------%
+%     NET = OUT*W_output;              % OUTPUT Layer
+%     OUT = F(NET);                    %
+%     ERROR = abs(TARGET - OUT);       %
+%     deltaQK = OUT.*(1 - OUT).*ERROR; %
+%     %--------------------------------%
 %     
 %     %Reverse pass error propagation
 %     for j = layers:-1:1 %loop through layers backwards
@@ -69,15 +73,9 @@ for i = 1:max(size(INPUT))
     
 end
 
-%% Save weight matrices in .mat files
+% Save weight matrices in .mat files
 filename = ['W_' num2str(digit) '.mat'];
 save(filename, 'W_input', 'W_hidden', 'W_output')
 
 disp(['Training complete, weight data written to ' filename])
-
-
-
-
-
-
 
