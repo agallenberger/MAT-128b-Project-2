@@ -8,7 +8,7 @@ load mnistdata;
 digit = 5;               %select handwritten digit [0,9]
 trainORtest = 1;         %boolean, 1 -> train, 0 -> test
 layers = 1;              %number of hidden layers
-neurons_hidden = 784;    %number of neurons per hidden layer
+neurons_hidden = 4;      %number of neurons per hidden layer
 trainingRate = .05;      %within the interval [0.1, 0.01]
 
 %Things you can't change
@@ -63,20 +63,18 @@ for i = 1:max(size(INPUT))
         NET = INPUT(i,:)*W_input;
         OUT = F(NET);
         
-        OUT_data = zeros(layers+1, length(OUT));
-        OUT_data(1,:) = OUT;
+        OUT_data{1} = OUT;
         
         %HIDDEN to HIDDEN (only loops if there are more than 1 layer)
         for j = 1:layers-1
             NET = OUT*W_hidden(:,:,j);
             OUT = F(NET);
-            OUT_data(j+1,:) = OUT;
+            OUT_data{j+1} = OUT;
         end
         
         %HIDDEN to OUTPUT
         NET = OUT*W_output;
         OUT = F(NET);
-        OUT_data(layers+1,:) = OUT;
         
         ERROR = abs(TARGET - OUT);
         D_output = OUT.*(1 - OUT).*ERROR;
@@ -84,7 +82,7 @@ for i = 1:max(size(INPUT))
         
         %Reverse Pass
         for j = layers:-1:1
-           D(j,:) = D_output*W_output'.*(OUT_data(j,:).*(ones(size(OUT)) - OUT_data(j,:)));
+           D(j,:) = D_output*W_output'.*(OUT_data{j}.*(ones(size(OUT_data{j})) - OUT_data{j}));
            %idk how to feed this back into W
         end
         
