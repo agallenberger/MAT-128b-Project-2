@@ -53,14 +53,17 @@ for i = 1:max(size(INPUT))
         
         ERROR = abs(TARGET - OUT);
         deltaQK = OUT.*(1 - OUT).*ERROR;
+        
+        %Backwards Pass
+        % ...
 
-    %More than 0 HIDDEN layers
+    %Cse for more than 0 HIDDEN layers
     else
-        %INPUT to OUTPUT
+        %INPUT to HIDDEN
         NET = INPUT(i,:)*W_input;
         OUT = F(NET);
         
-        %HIDDEN to HIDDEN (only loops if there are more than 1 layers)
+        %HIDDEN to HIDDEN (only loops if there are more than 1 layer)
         for j = 1:layers-1
             NET = OUT*W_hidden(:,:,j);
             OUT = F(NET);
@@ -72,6 +75,10 @@ for i = 1:max(size(INPUT))
         
         ERROR = abs(TARGET - OUT);
         deltaQK = OUT.*(1 - OUT).*ERROR;
+        
+        
+        %Backwards Pass
+        % ...
         
     end
     
