@@ -26,7 +26,7 @@ function TARGET = getTARGET(digit)
     elseif digit == 9
         TARGET = mean(train9);
     else
-        disp('getTARGET.m Error: digit not found, returned 0');
+        disp('getTARGET.m Error: more than one digit passed, returned 0');
         TARGET = 0;
     end
     

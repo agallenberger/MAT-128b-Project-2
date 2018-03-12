@@ -6,7 +6,7 @@ load mnistdata;
 
 %% Initialize neural net parameters
 digit = 5;               %select handwritten digit [0,9]
-trainORtest = 4;         %boolean, 1 -> train, 0 -> test
+trainORtest = 1;         %boolean, 1 -> train, 0 -> test
 layers = 1;              %number of hidden layers
 neurons_hidden = 784;    %number of neurons per hidden layer
 trainingRate = .05;      %within the interval [0.1, 0.01]
@@ -18,7 +18,6 @@ neurons_output = 784;    %number of neurons in the output layer
 %% Load INPUT and TARGET data
 TARGET = getTARGET(digit);
 INPUT = double(logical(getMNIST(digit, trainORtest)));
-n = length(INPUT(1,:));
 
 %% Initialize OUT function and weight matrix
 F = @(NET) 1./(1+exp(-NET));
@@ -55,7 +54,7 @@ for i = 1:max(size(INPUT))
         ERROR = abs(TARGET - OUT);
         deltaQK = OUT.*(1 - OUT).*ERROR;
         
-        %Backwards Pass
+        %Reverse Pass
         % ...
 
     %Cse for more than 0 HIDDEN layers
@@ -68,7 +67,6 @@ for i = 1:max(size(INPUT))
         for j = 1:layers-1
             NET = OUT*W_hidden(:,:,j);
             OUT = F(NET);
-            disp('x')
         end
         
         %HIDDEN to OUTPUT
@@ -79,7 +77,7 @@ for i = 1:max(size(INPUT))
         deltaQK = OUT.*(1 - OUT).*ERROR;
         
         
-        %Backwards Pass
+        %Reverse Pass
         % ...
         
     end
