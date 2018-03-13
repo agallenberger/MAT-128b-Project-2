@@ -3,10 +3,10 @@
 %Create neural net
 clear; clc; close all;
 load mnistdata;
-%load W_master;
+load W_master;
 
 %% Initialize neural net parameters
-digit = 2;               %select handwritten digit [0,9]
+digit = 3;               %select handwritten digit [0,9]
 trainORtest = 0;         %boolean, 1 -> train, 0 -> test
 
 %% Initialize INPUT data and OUT function
@@ -15,7 +15,7 @@ INPUT = double(logical(getMNIST(digit, trainORtest)));
 
 %% Peform forward pass on input and display results
 for z = 0:9
-    W = getWeight(z);
+    %W = getWeight(z);
     layers = length(W) - 1;
     for i = 1:max(size(INPUT))
 
@@ -25,6 +25,7 @@ for z = 0:9
             NET = OUT*W{j};
             OUT = F(NET);
         end
+        OUTPUT(z+1,:) = OUT;
         maxOUT{z+1}(i) = max(OUT);
     end
 end
@@ -37,6 +38,6 @@ for i = 1:max(size(INPUT))
     [~,d] = max(output);
     d = d-1;
     disp(['Test #' num2str(i) ', guess = ' num2str(d)])
-end 
-disp(['Test Digit = ' num2str(digit)])
-output
+end
+disp(['Expected Digit = ' num2str(digit)])
+OUTPUT

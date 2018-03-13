@@ -2,7 +2,6 @@
 %MAT 128b Project 2 - Part 4, 5, 6
 %Driver file for train_net.m
 clear; clc; close all;
-load mnistdata;
 
 %% Initialize neural net parameters
 layers = 1;              %number of hidden layers [1,inf)
@@ -32,27 +31,12 @@ W{end+1} = rand(neurons_hidden, neurons_output); %HIDDEN -> OUTPUT
 %         disp([ num2str(i/100) '/20'])
 %     end
 % end
+INPUT = zeros(5000,784);
+for i = 1:5000
+    INPUT(i,:) = train0(ceil(rand()*5000),:)
 
-train{1} = train1;
-train{2} = train2;
-train{3} = train3;
-train{4} = train4;
-train{5} = train5;
-train{6} = train6;
-train{7} = train7;
-train{8} = train8;
-train{9} = train9;
-train{10} = train0;
-
-for k = 1:10
-    INPUT = zeros(5000,784);
-    digits = [0 1 2 3 4 5 6 7 8 9];
-    digits = repmat(digits,1,500);
-    for i = 1:5000
-        INPUT(i,:) = train{digits(i)+1}(i,:);
-    end
-
-    W = train_net(INPUT, digits, W, layers, trainingRate);
+for digit = 9:-1:0
+    W = train_net(W, layers, neurons_output, trainingRate, digit);
 end
 
 %% Save weight matrices in .mat files
