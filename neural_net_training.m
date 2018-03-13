@@ -15,6 +15,11 @@ trainingRate = .1;      %within the interval [0.1, 0.01]
 neurons_input = 784;     %number of neurons in the input layer
 neurons_output = 10;     %number of neurons in the output layer
 
+
+%Things you can't change
+neurons_input = 784;     %number of neurons in the input layer
+neurons_output = 784;    %number of neurons in the output layer
+
 %% Load INPUT and TARGET data
 TARGET = zeros(1,neurons_output);
 for i = 1:neurons_output
