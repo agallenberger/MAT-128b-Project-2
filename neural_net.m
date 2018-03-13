@@ -5,21 +5,17 @@ clear; clc; close all;
 load mnistdata;
 
 %% Initialize neural net parameters
-trainORtest = 1;         %boolean, 1 -> train, 0 -> test
+digit = 5;               %select handwritten digit [0,9]
+trainORtest = 0;         %boolean, 1 -> train, 0 -> test
 
-%Initialize OUT function 
+%% Initialize INPUT data and OUT function
 F = @(NET) 1./(1+exp(-NET));
+INPUT = double(logical(getMNIST(digit, trainORtest)));
 
 %% Peform forward pass on input and display results
-for digit = 0:9
-    
-    %Initialize inputs, weights, and layers for the digit
-    INPUT = double(logical(getMNIST(digit, trainORtest)));
-    W = getWeight(digit);
+for z = 0:9
+    W = getWeight(z);
     layers = length(W) - 1;
-    
-    fprintf('Testing');
-    fail = 0;
     for i = 1:max(size(INPUT))
 
         %Forward Pass on all layers
@@ -28,29 +24,18 @@ for digit = 0:9
             NET = OUT*W{j};
             OUT = F(NET);
         end
-
-        [~,d] = max(OUT);
-        d = d - 1;
-
-
-        if d ~= digit
-            fprintf('\n')
-            disp(['Test ' num2str(i) '/' num2str(max(size(INPUT))) ' failed.']) 
-            disp(['Guess digit = ' num2str(d) ', Input digit = ' num2str(digit)])
-            fail = 1;
-            break;
-        end
-        if mod(i,100) == 0
-            fprintf('.');
-        end
-
+        maxOUT{z+1}(i) = max(OUT);
     end
-    if fail == 0
-        fprintf('\n')
-        disp([num2str(i) '/' num2str(max(size(INPUT))) ' tests passed'])
-        disp(['Input digit = ' num2str(digit)])
-    end
-    fprintf('\n');
-    
 end
+
+for i = 1:max(size(INPUT))
+    output = zeros(1,10);
+    for k = 1:10
+        output(k) = maxOUT{k}(i);
+    end
+    [~,d] = max(output);
+    d = d-1;
+    disp(['Test #' num2str(i) ', guess = ' num2str(d)])
+end 
+disp(['Test Digit = ' num2str(digit)])
 
