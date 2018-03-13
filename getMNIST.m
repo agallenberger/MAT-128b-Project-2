@@ -3,7 +3,13 @@
 %function to retrieve MNIST data
 
 function data = getMNIST(digit, train)
-
+    
+    if train > 1 || train < 0
+        disp('getMNIST.m Error: train variable passed is not boolean, returned 0')
+        data = 0;
+        return;
+    end
+    
     load mnistdata;
     if digit == 0
         if train == 1
@@ -66,8 +72,9 @@ function data = getMNIST(digit, train)
             data = test9;
         end
     else
-        disp('getMNISTdata.m Error: digit not found, returned 0');
+        disp('getMNIST.m Error: more than one digit passed, returned 0');
         data = 0;
+        return;
     end
 
 end
