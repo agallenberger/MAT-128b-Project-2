@@ -7,8 +7,9 @@ function W = train_net(INPUT, digits, W, layers, trainingRate)
     F = @(NET) 1./(1+exp(-NET));
     F_prime = @(NET) exp(-NET)./((1 + exp(-NET)).^2);
     
-    for i = 1:max(size(INPUT));
-        TARGET = zeros(1,10) + .5;
+    [iterations,~] = size(INPUT);
+    for i = 1:iterations
+        TARGET = zeros(1,10);
         for k = 1:10
             if k-1 == digits(k)
                 TARGET(k) = 1;
@@ -39,6 +40,12 @@ function W = train_net(INPUT, digits, W, layers, trainingRate)
                 W{j} = W{j} - trainingRate.*W{j}.*(OUT{j-1}'*delta{j}');
             end
         end
+%         for k = 1:length(W)
+%            [~, col] = size(W{k});
+%            for j = 1:col
+%                W{k}(:,j) = W{k}(:,j)/sum(W{k}(:,j));
+%            end
+%         end
     end
         
 end

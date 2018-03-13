@@ -75,7 +75,7 @@ for i = 1:max(size(INPUT))
 end
 
 %% Save weight matrices in .mat files
-filename = ['W_' num2str(digit) '.mat'];
+filename = 'W.mat';
 save(filename, 'W')
 
 disp('--------------- TRAINING COMPLETE ---------------')

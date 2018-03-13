@@ -19,18 +19,11 @@ for i = 1:layers-1
     W{i+1} = rand(neurons_hidden, neurons_hidden); %HIDDEN -> HIDDEN
 end
 W{end+1} = rand(neurons_hidden, neurons_output); %HIDDEN -> OUTPUT
-
-% for i = 1:2000
-%     
-%     digit = floor(rand()*10);
-%     k = ceil(rand()*3000);
-%     
-%     INPUT = double(logical(getMNIST(digit, 1)));
-%     W = train_net(INPUT(k,:), W, layers, neurons_output, trainingRate, digit);
-% 
-%     if mod(i,100) == 0
-%         disp([ num2str(i/100) '/20'])
-%     end
+% for i = 1:length(W)
+%    [row, col] = size(W{i});
+%    for j = 1:col
+%        W{i}(:,j) = W{i}(:,j)/sum(W{i}(:,j));
+%    end
 % end
 
 train{1} = train1;
@@ -44,16 +37,16 @@ train{8} = train8;
 train{9} = train9;
 train{10} = train0;
 
-for k = 1:10
-    INPUT = zeros(5000,784);
-    digits = [0 1 2 3 4 5 6 7 8 9];
-    digits = repmat(digits,1,500);
-    for i = 1:5000
-        INPUT(i,:) = train{digits(i)+1}(i,:);
-    end
+testsize = 5000;
 
-    W = train_net(INPUT, digits, W, layers, trainingRate);
+INPUT = zeros(testsize, 784);
+digits = [0 1 2 3 4 5 6 7 8 9];
+digits = repmat(digits,1,testsize/10);
+for i = 1:testsize
+    INPUT(i,:) = train{digits(i)+1}(i,:);
 end
+
+W = train_net(INPUT, digits, W, layers, trainingRate);
 
 %% Save weight matrices in .mat files
 filename = 'W_master.mat';
