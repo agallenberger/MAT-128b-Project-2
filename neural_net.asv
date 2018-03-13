@@ -7,17 +7,14 @@ load mnistdata;
 %% Initialize neural net parameters
 trainORtest = 1;         %boolean, 1 -> train, 0 -> test
 
-%Initialize OUT function 
+%% Initialize INPUT data, OUT function and weight matrix
+INPUT = double(logical(getMNIST(digit, trainORtest)));
 F = @(NET) 1./(1+exp(-NET));
+W = getWeight(digit);
+layers = length(W) - 1;
 
 %% Peform forward pass on input and display results
-for digit = 0:9
-    
-    %Initialize inputs, weights, and layers for the digit
-    INPUT = double(logical(getMNIST(digit, trainORtest)));
-    W = getWeight(digit);
-    layers = length(W) - 1;
-    
+
     fprintf('Testing');
     fail = 0;
     for i = 1:max(size(INPUT))
@@ -50,7 +47,3 @@ for digit = 0:9
         disp([num2str(i) '/' num2str(max(size(INPUT))) ' tests passed'])
         disp(['Input digit = ' num2str(digit)])
     end
-    fprintf('\n');
-    
-end
-
