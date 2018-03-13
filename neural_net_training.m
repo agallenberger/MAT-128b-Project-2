@@ -59,7 +59,7 @@ for i = 1:max(size(INPUT))
     delta{length(W)} = OUT_data{end}.*(1-OUT_data{end}).*ERROR;
     for j = 1:length(OUT_data{end-1})
         for k = 1:length(OUT_data{end})
-            w_change{length(W)}(j,k) = 0.1 * delta{length(W)}(k)*OUT_data{end-1}(j);
+            w_change{length(W)}(j,k) = trainingRate*delta{length(W)}(k)*OUT_data{end-1}(j);
         end
     end
 
