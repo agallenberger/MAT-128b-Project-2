@@ -3,9 +3,10 @@
 %Create neural net
 clear; clc; close all;
 load mnistdata;
+%load W_master;
 
 %% Initialize neural net parameters
-digit = 5;               %select handwritten digit [0,9]
+digit = 2;               %select handwritten digit [0,9]
 trainORtest = 0;         %boolean, 1 -> train, 0 -> test
 
 %% Initialize INPUT data and OUT function
@@ -38,4 +39,4 @@ for i = 1:max(size(INPUT))
     disp(['Test #' num2str(i) ', guess = ' num2str(d)])
 end 
 disp(['Test Digit = ' num2str(digit)])
-
+output
