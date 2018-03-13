@@ -9,7 +9,7 @@ digit = 9;               %select handwritten digit [0,9]
 trainORtest = 1;         %boolean, 1 -> train, 0 -> test
 layers = 2;              %number of hidden layers [1,inf)
 neurons_hidden = 3;      %number of neurons per hidden layer
-trainingRate = .1;      %within the interval [0.1, 0.01]
+trainingRate = .1;       %within the interval [0.1, 0.01]
 
 %Things you can't change
 neurons_input = 784;     %number of neurons in the input layer
