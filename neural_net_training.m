@@ -65,7 +65,7 @@ for i = 1:max(size(INPUT))
     %Reverse Pass on HIDDEN -> HIDDEN and INPUT -> HIDDEN weights
     for k = length(W):-1:2
         
-        delta{k-1} = (delta{k}*W{k}').*(OUT_data{k}.*(1 - OUT_data{k}));
+        delta{k-1} = (delta{k}*W{k}').*(OUT_data{k-1}.*(1 - OUT_data{k-1}));
         
         for j = 1:length(OUT_data{k-1})
             for z = 1:length(OUT_data{k-1})
