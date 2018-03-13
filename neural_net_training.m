@@ -5,11 +5,11 @@ clear; clc; close all;
 load mnistdata;
 
 %% Initialize neural net parameters
-digit = 5;               %select handwritten digit [0,9]
+digit = 9;               %select handwritten digit [0,9]
 trainORtest = 1;         %boolean, 1 -> train, 0 -> test
 layers = 2;              %number of hidden layers [1,inf)
-neurons_hidden = 4;      %number of neurons per hidden layer
-trainingRate = .05;      %within the interval [0.1, 0.01]
+neurons_hidden = 3;      %number of neurons per hidden layer
+trainingRate = .1;      %within the interval [0.1, 0.01]
 
 %Things you can't change
 neurons_input = 784;     %number of neurons in the input layer
@@ -26,6 +26,7 @@ INPUT = double(logical(getMNIST(digit, trainORtest)));
 
 %% Initialize OUT function and weight matrix
 F = @(NET) 1./(1+exp(-NET));
+F_prime = @(NET) exp(-NET)./((1 + exp(-NET)).^2);
 
 %Part 5 - Weight matrix for INPUT-HIDDEN, HIDDEN-HIDDEN, and HIDDEN-OUTPUT
 %       - There will only be 1 INPUT-HIDDEN and HIDDEN-OUTPUT matrix, but multiple 
@@ -38,56 +39,36 @@ for i = 1:layers-1
 end
 W{end+1} = rand(neurons_hidden, neurons_output); %HIDDEN -> OUTPUT
 
-
 %% Train the neural net on the desired digit
 for i = 1:max(size(INPUT))
     
     %Forward Pass on all layers
-    OUT = INPUT(i,:);
-    OUT_data{1} = OUT;
+    OUT_ = INPUT(i,:);
+    OUT_input = OUT_;
     for j = 1:layers+1
-        NET = OUT*W{j};
-        OUT = F(NET);
-        OUT_data{j+1} = OUT;
+        NET = OUT_*W{j};
+        OUT_ = F(NET);
+        OUT{j} = OUT_;
     end
     
     %Calculate ERROR and delta at the OUTPUT layer
-    ERROR = abs(TARGET - OUT_data{end});
-    delta{length(W)} = OUT_data{end}.*(1 - OUT_data{end}).*ERROR;
+    ERROR = abs(TARGET - OUT{end});
 
-    %Reverse Pass on HIDDEN -> OUTPUT weights
-    for j = 1:length(OUT_data{end-1})
-        for k = 1:length(OUT_data{end})
-            w_change{length(W)}(j,k) = trainingRate*delta{length(W)}(k)*OUT_data{end-1}(j);
+    %Reverse pass from https://sudeepraja.github.io/Neural/  
+    delta{length(W)} = (OUT{end}' - TARGET').*F_prime(W{end}'*OUT{end-1}');
+    for j = length(W)-1:-1:1
+        if j-1 == 0
+            delta{j} = (W{j+1}*delta{j+1}).*F_prime(W{j}'*OUT_input'); 
+        else
+            delta{j} = (W{j+1}*delta{j+1}).*F_prime(W{j}'*OUT{j-1}'); 
         end
     end
-
-    %Reverse Pass on HIDDEN -> HIDDEN and INPUT -> HIDDEN weights
-    for k = length(W):-1:2
-        
-        delta{k-1} = (delta{k}*W{k}').*(OUT_data{k-1}.*(1 - OUT_data{k-1}));
-        
-        for j = 1:length(OUT_data{k-1})
-            for z = 1:length(OUT_data{k-1})
-                
-                w_change{k-1}(j,z) = trainingRate*delta{k-1}(z)*OUT_data{k-1}(j);
-                disp(['k = ' num2str(k) ' to ' num2str(2)])
-                disp(['j = ' num2str(j) ' to ' num2str(length(OUT_data{k-1}))])
-                disp(['z = ' num2str(z) ' to ' num2str(length(OUT_data{k-1}))])
-                disp(' ')
-                
-            end
-        end
-    end
-    
-    %Apply weight changes
     for j = 1:length(W)
-        W{j} = W{j} + w_change{j};
-    end
-
-    %Display error at every 100 iterations
-    if mod(i,100) == 0
-        fprintf('Pass #%1.0f, avg error = %1.7f\n', i, mean(ERROR))
+        if j-1 == 0
+            W{j} = W{j} - trainingRate.*W{j}.*(OUT_input'*delta{j}');
+        else
+            W{j} = W{j} - trainingRate.*W{j}.*(OUT{j-1}'*delta{j}');
+        end
     end
     
 end
