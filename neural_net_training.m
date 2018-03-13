@@ -7,7 +7,7 @@ load mnistdata;
 %% Initialize neural net parameters
 digit = 5;               %select handwritten digit [0,9]
 trainORtest = 1;         %boolean, 1 -> train, 0 -> test
-layers = 1;              %number of hidden layers [1,inf)
+layers = 2;              %number of hidden layers [1,inf)
 neurons_hidden = 4;      %number of neurons per hidden layer
 trainingRate = .05;      %within the interval [0.1, 0.01]
 
@@ -42,34 +42,51 @@ W{end+1} = rand(neurons_hidden, neurons_output); %HIDDEN -> OUTPUT
 %% Train the neural net on the desired digit
 for i = 1:max(size(INPUT))
     
-    %Forward Pass
+    %Forward Pass on all layers
     OUT = INPUT(i,:);
+    OUT_data{1} = OUT;
     for j = 1:layers+1
         NET = OUT*W{j};
         OUT = F(NET);
-        OUT_data{j} = OUT;
+        OUT_data{j+1} = OUT;
     end
     
-    %Calculate error at the OUTPUT layer
+    %Calculate ERROR and delta at the OUTPUT layer
     ERROR = abs(TARGET - OUT_data{end});
-    D_output = OUT_data{end}.*(ones(size(OUT_data{end})) - OUT_data{end}).*ERROR;
-
+    delta{length(W)} = OUT_data{end}.*(ones(size(OUT_data{end})) - OUT_data{end}).*ERROR;
 
     %Reverse Pass on HIDDEN -> OUTPUT weights
-    w_change_output = zeros(neurons_hidden, neurons_output);
-    for k = 1:neurons_hidden
-        for j = 1:neurons_output
-            w_change_output(k,j) = trainingRate*D_output(j)*OUT_data{end}(k);
+    delta{length(W)} = OUT_data{end}.*(1-OUT_data{end}).*ERROR;
+    for j = 1:length(OUT_data{end-1})
+        for k = 1:length(OUT_data{end})
+            w_change{length(W)}(j,k) = 0.1 * delta{length(W)}(k)*OUT_data{end-1}(j);
         end
     end
-    W{end} = W{end} + w_change_output;
 
-
-    %Reverse Pass on HIDDEN -> HIDDEN weights
-    w_change_hidden = zeros(neurons_hidden, neurons_hidden);
-
+    %Reverse Pass on HIDDEN -> HIDDEN and INPUT -> HIDDEN weights
+    for k = length(W):-1:2
+        
+        delta{k-1} = (delta{k}*W{end}').*(OUT_data{k}.*(ones(size(OUT_data{k})) - OUT_data{k}));
+        
+        for j = 1:length(OUT_data{k-1})
+            for z = 1:length(OUT_data{k-1})
+                
+                w_change{k-1}(j,z) = trainingRate*delta{k-1}(z)*OUT_data{k-1}(j);
+                disp(['k = ' num2str(k) ' to ' num2str(2)])
+                disp(['j = ' num2str(j) ' to ' num2str(length(OUT_data{k-1}))])
+                disp(['z = ' num2str(z) ' to ' num2str(length(OUT_data{k-1}))])
+                disp(' ')
+                
+            end
+        end
+    end
     
+    %Apply weight changes
+    for j = 1:length(W)
+        W{j} = W{j} + w_change{j};
+    end
 
+    %Display error at every 100 iterations
     if mod(i,100) == 0
         fprintf('Pass #%1.0f, avg error = %1.7f\n', i, mean(ERROR))
     end
