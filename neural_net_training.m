@@ -53,10 +53,9 @@ for i = 1:max(size(INPUT))
     
     %Calculate ERROR and delta at the OUTPUT layer
     ERROR = abs(TARGET - OUT_data{end});
-    delta{length(W)} = OUT_data{end}.*(ones(size(OUT_data{end})) - OUT_data{end}).*ERROR;
+    delta{length(W)} = OUT_data{end}.*(1 - OUT_data{end}).*ERROR;
 
     %Reverse Pass on HIDDEN -> OUTPUT weights
-    delta{length(W)} = OUT_data{end}.*(1-OUT_data{end}).*ERROR;
     for j = 1:length(OUT_data{end-1})
         for k = 1:length(OUT_data{end})
             w_change{length(W)}(j,k) = trainingRate*delta{length(W)}(k)*OUT_data{end-1}(j);
@@ -66,7 +65,7 @@ for i = 1:max(size(INPUT))
     %Reverse Pass on HIDDEN -> HIDDEN and INPUT -> HIDDEN weights
     for k = length(W):-1:2
         
-        delta{k-1} = (delta{k}*W{end}').*(OUT_data{k}.*(ones(size(OUT_data{k})) - OUT_data{k}));
+        delta{k-1} = (delta{k}*W{end}').*(OUT_data{k}.*(1 - OUT_data{k}));
         
         for j = 1:length(OUT_data{k-1})
             for z = 1:length(OUT_data{k-1})
