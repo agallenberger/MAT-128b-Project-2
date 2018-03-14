@@ -8,7 +8,7 @@ load mnistdata;
 layers = 1;               %number of hidden layers [1,inf)
 neurons_hidden = 3;      %number of neurons per hidden layer
 trainingRate = .1;       %within the interval [0.1, 0.01]
-inputSize = 10000;         %number of digit image samples in the input
+inputSize = 100000;         %number of digit image samples in the input
 
 %Things you can't change
 neurons_input = 784;      %number of neurons in the input layer
@@ -41,7 +41,6 @@ digits = repmat(digits,1,inputSize/10);
 for i = 1:inputSize
     INPUT(i,:) = train{digits(i)+1}(ceil(rand()*5400),:);
 end
-disp('Progress (images trained):');
 W = train_net(INPUT, digits, W, layers, trainingRate);
 clc;
 

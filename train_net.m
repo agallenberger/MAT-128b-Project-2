@@ -69,6 +69,8 @@ function W = train_net(INPUT, digits, W, layers, trainingRate)
         
         %Output training progress
         if mod(iter,500) == 0
+            clc;
+            disp('Progress (images trained):');
             fprintf('%1.0f/%1.0f \n', iter, iterations);
         end
 
