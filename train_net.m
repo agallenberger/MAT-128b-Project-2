@@ -66,6 +66,11 @@ function W = train_net(INPUT, digits, W, layers, trainingRate)
         for i = 1:length(W)
             W{i} = W{i} + w_change{i};
         end
+        
+        %Output training progress
+        if mod(iter/500) == 0
+            fprintf('%1.0f/%1.0f... 'iter,iterations);
+        end
     end
         
 end

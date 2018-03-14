@@ -6,7 +6,7 @@ load mnistdata;
 
 %% Initialize neural net parameters
 layers = 1;               %number of hidden layers [1,inf)
-neurons_hidden = 4;      %number of neurons per hidden layer
+neurons_hidden = 10;      %number of neurons per hidden layer
 trainingRate = .1;       %within the interval [0.1, 0.01]
 inputSize = 60000;         %number of digit image samples in the input
 
