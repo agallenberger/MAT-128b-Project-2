@@ -6,20 +6,20 @@ load mnistdata;
 
 %% Initialize neural net parameters
 layers = 1;               %number of hidden layers [1,inf)
-neurons_hidden = 3;      %number of neurons per hidden layer
-trainingRate = .1;       %within the interval [0.1, 0.01]
-inputSize = 100000;         %number of digit image samples in the input
+neurons_hidden = 10;      %number of neurons per hidden layer
+trainingRate = .01;        %within the interval [0.01, 0.1]
+inputSize = 10000;        %number of digit image samples in the input
 
 %Things you can't change
 neurons_input = 784;      %number of neurons in the input layer
 neurons_output = 10;      %number of neurons in the output layer
 
 %% Initialize weight matrices
-W{1} = (rand(neurons_input, neurons_hidden)*2 - 1)/10; %INPUT -> HIDDEN
+W{1} = (rand(neurons_input, neurons_hidden)*2)/10; %INPUT -> HIDDEN
 for iter = 1:layers-1
-    W{iter+1} = (rand(neurons_hidden, neurons_hidden)*2 - 1)/10; %HIDDEN -> HIDDEN
+    W{iter+1} = (rand(neurons_hidden, neurons_hidden)*2)/10; %HIDDEN -> HIDDEN
 end
-W{end+1} = (rand(neurons_hidden, neurons_output)*2 - 1)/10; %HIDDEN -> OUTPUT
+W{end+1} = (rand(neurons_hidden, neurons_output)*2)/10; %HIDDEN -> OUTPUT
 
 %% Load training data
 train{1} = train0;
@@ -54,4 +54,5 @@ disp(['  - Number of HIDDEN layers =            ' num2str(layers)])
 disp(['  - Number of INPUT neurons =            ' num2str(neurons_input)])
 disp(['  - Number of HIDDEN neurons/layer =     ' num2str(neurons_hidden)])
 disp(['  - Number of OUTPUT neurons =           ' num2str(neurons_output)])
+disp(['  - Number of training images used =     ' num2str(inputSize)])
 disp(['  - Weight data written to:              ' filename])

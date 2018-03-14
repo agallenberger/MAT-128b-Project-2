@@ -15,13 +15,14 @@ disp(['   - Number of HIDDEN layers =            ' num2str(layers)])
 disp(['   - Number of INPUT neurons =            ' num2str(neurons_input)])
 disp(['   - Number of HIDDEN neurons/layer =     ' num2str(neurons_hidden)])
 disp(['   - Number of OUTPUT neurons =           ' num2str(neurons_output)])
-fprintf(' \nTesting....\n');
+disp(' Testing....');
 
 for digit = 0:9
-    %Initialize testing variables
+    
     INPUT = double(logical(getMNIST(digit, 0)));
     [iterations,~] = size(INPUT);
     pass = 0;
+    ERROR = zeros(iterations,10);
     TARGET = zeros(1,10);
     for k = 1:10
         if k-1 == digit
@@ -37,22 +38,20 @@ for digit = 0:9
             X = F(NET);
         end
         
-        ERROR{digit+1}(iter,:) = TARGET - X;
+        ERROR(iter,:) = TARGET - X;
         [maxOUT, digitOUT] = max(X);
         
         if digitOUT-1 == digit
             pass = pass+1;
         end
     end
+    
+    OUTPUT;
     fprintf('   Digit = %1.0f, -> %2.1f%% success rate\n', digit, 100*pass/iterations);
+    
 end
 
-fprintf(' \nAnalyze Error:\n')
-for digit = 0:9
-    for i = 1:10
-        ERROR_avg(digit+1,i) = abs(mean(ERROR{digit+1}(:,i)));
-    end
-end
-disp(ERROR_avg)
+disp(' Analyze Error:')
+for i = 1:iterations
     
 

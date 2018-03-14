@@ -8,7 +8,7 @@ load mnistdata;
 digit = 1;               %select handwritten digit [0,9]
 trainORtest = 1;         %boolean, 1 -> train, 0 -> test
 layers = 2;              %number of hidden layers [1,inf)
-neurons_hidden = 10;      %number of neurons per hidden layer
+neurons_hidden = 10;     %number of neurons per hidden layer
 trainingRate = .1;       %within the interval [0.1, 0.01]
 
 %Things you can't change
