@@ -24,7 +24,8 @@ end
 %% Plot the average train digits   
 digitImage_mean = zeros(28,28,10);
 for i = 1:10 
-    digitImage_mean(:,:,i) = reshape(getTARGET(i-1),28,28);
+    meanDigit = mean(getMNIST(i-1,train));
+    digitImage_mean(:,:,i) = reshape(meanDigit,28,28);
 end 
 
 f2 = figure; 
