@@ -11,7 +11,7 @@ function TARGET = getTARGET(digit)
         TARGET = mean(train1);
     elseif digit == 2
         TARGET = mean(train2);
-     elseif digit == 3
+    elseif digit == 3
         TARGET = mean(train3);
     elseif digit == 4
         TARGET = mean(train4);
