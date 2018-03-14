@@ -2,7 +2,7 @@
 %MAT 128b Project 2
 %Create neural net & test it
 clear; clc; close all;
-load W_master2;
+load W_master;
 
 %% Test the Neural Net
 F = @(NET) 1./(1+exp(-NET));

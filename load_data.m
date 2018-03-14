@@ -5,7 +5,7 @@ clear; clc; close all;
 load mnistdata;
 
 %% Select digit
-digit = 9;
+digit = 4;
 train = 1; %if 0, will use test digit instead
 
 %% Visualize a selected train/test digit
@@ -17,7 +17,7 @@ for i = 1:3
    digitImage = reshape(TestTrainDigit(i,:), 28, 28);
    subplot(1,3,i); 
    image(rot90(flipud(digitImage), -1));
-   colormap(gray(256)); 
+   colormap(flipud(gray(256))); 
    axis square tight off; 
 end 
 
@@ -31,6 +31,6 @@ f2 = figure;
 for i = 1:10 
     subplot(2,5,i) 
     image(rot90(flipud(digitImage_mean(:,:,i)),-1)); 
-    colormap(gray(256)); 
+    colormap(flipud(gray(256))); 
     axis square tight off; 
 end

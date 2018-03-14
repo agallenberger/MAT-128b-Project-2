@@ -5,10 +5,10 @@ clear; clc; close all;
 load mnistdata;
 
 %% Initialize neural net parameters
-layers = 3;               %number of hidden layers [1,inf)
-neurons_hidden = 40;      %number of neurons per hidden layer
-trainingRate = .03;        %within the interval [0.01, 0.1]
-inputSize = 500000;        %number of digit image samples in the input
+layers = 1;               %number of hidden layers [1,inf)
+neurons_hidden = 100;      %number of neurons per hidden layer
+trainingRate = .05;        %within the interval [0.01, 0.1]
+inputSize = 100000;        %number of digit image samples in the input
 
 %Things you can't change
 neurons_input = 784;      %number of neurons in the input layer
