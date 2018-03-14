@@ -56,62 +56,55 @@ for iter = 1:max(size(INPUT))
         %weight W{i} of layer(i) produces output OUT{i+1}
     end
     
-    %Calculate ERROR and delta at the OUTPUT layer
-    ERROR = TARGET - OUT{end};
-    delta{length(W)} = OUT{end}.*(1 - OUT{end}).*ERROR;
-    
-    %Reverse propagation
-    [neurons_j, neurons_k] = size(W{end});
-    for j = 1:neurons_j
-        for k = 1:neurons_k
-            w_change{length(W)}(j,k) = trainingRate*delta{end}(k)*OUT{end-1}(j);
-        end
-    end
-    
-    for numLayer = length(W)-1:-1:1
-        delta{numLayer} = (delta{numLayer+1}*W{numLayer+1}').*(OUT{numLayer+1}.*(1 - OUT{numLayer+1}));
-    end
-    
-%     for j = length(W)-1:-1:1
-%         [neurons_j, neurons_k] = size(W{j+1});
-%         for p = 1:neurons_j
-%             sumK = 0;
-%             for q = 1:neurons_k
-%                 sumK = sumK + delta{j+1}(q)*W{j+1}(p,q);
+%     %Calculate ERROR and delta at the OUTPUT layer
+%     ERROR = TARGET - OUT{end};
+%     delta{length(W)} = OUT{end}.*(1 - OUT{end}).*ERROR;
+%     
+%     %Reverse propagation
+%     [neurons_j, neurons_k] = size(W{end});
+%     for j = 1:neurons_j
+%         for k = 1:neurons_k
+%             w_change{length(W)}(j,k) = trainingRate*delta{end}(k)*OUT{end-1}(j);
+%         end
+%     end
+%     
+%     for numLayer = length(W)-1:-1:1
+%         delta{numLayer} = (delta{numLayer+1}*W{numLayer+1}').*(OUT{numLayer+1}.*(1 - OUT{numLayer+1}));
+%     end
+%     
+% %     for j = length(W)-1:-1:1
+% %         [neurons_j, neurons_k] = size(W{j+1});
+% %         for p = 1:neurons_j
+% %             sumK = 0;
+% %             for q = 1:neurons_k
+% %                 sumK = sumK + delta{j+1}(q)*W{j+1}(p,q);
+% %             end
+% %             delta{j}(p) = OUT{j}(p)*(1 - OUT{j}(p))*sumK;
+% %         end
+% %     end
+%     
+%     for numLayer = 1:length(W)-1
+%         [neurons_j, neurons_k] = size(W{numLayer});
+%         for j = 1:neurons_j
+%             for k = 1:neurons_k
+%                 w_change{numLayer}(j,k) = trainingRate*delta{numLayer}(k)*OUT{numLayer}(j);
 %             end
-%             delta{j}(p) = OUT{j}(p)*(1 - OUT{j}(p))*sumK;
 %         end
 %     end
-    
-    for numLayer = 1:length(W)-1
-        [neurons_j, neurons_k] = size(W{numLayer});
-        for j = 1:neurons_j
-            for k = 1:neurons_k
-                w_change{numLayer}(j,k) = trainingRate*delta{numLayer}(k)*OUT{numLayer}(j);
-            end
-        end
-    end
-    
-    for i = 1:length(W)
-        W{i} = W{i} + w_change{i};
-    end
+%     
+%     for i = 1:length(W)
+%         W{i} = W{i} + w_change{i};
+%     end
 
-%     %Reverse pass from https://sudeepraja.github.io/Neural/  
-%     delta{length(W)} = (OUT{end}' - TARGET').*ERROR';
-%     for j = length(W)-1:-1:1
-%         if j-1 == 0
-%             delta{j} = (W{j+1}*delta{j+1}).*F_prime(W{j}'*OUT_input'); 
-%         else
-%             delta{j} = (W{j+1}*delta{j+1}).*F_prime(W{j}'*OUT{j-1}'); 
-%         end
-%     end
-%     for j = 1:length(W)
-%         if j-1 == 0
-%             W{j} = W{j} - trainingRate.*W{j}.*(OUT_input'*delta{j}');
-%         else
-%             W{j} = W{j} - trainingRate.*W{j}.*(OUT{j-1}'*delta{j}');
-%         end
-%     end
+    %Reverse pass from https://sudeepraja.github.io/Neural/
+    delta{length(W)} = (OUT{end}' - TARGET').*F_prime(W{end}*OUT{end-1}');
+    for j = length(W)-1:-1:1
+        delta{j} = (W{j+1}*delta{j+1}).*F_prime(W{j}'*OUT{j}'); 
+    end
+    for j = 1:length(W)
+        W{j} = W{j} - trainingRate.*W{j}.*(OUT{j}'*delta{j}');
+    end
+    
     if mod(iter,100) == 0;
         disp([ num2str(iter) '/' num2str(max(size(INPUT)))])
     end
@@ -119,7 +112,7 @@ end
 
 %% Save weight matrices in .mat files
 filename = 'W.mat';
-save(filename, 'W')
+%save(filename, 'W')
 
 disp('--------------- TRAINING COMPLETE ---------------')
 disp('Neural Net Parameters:')

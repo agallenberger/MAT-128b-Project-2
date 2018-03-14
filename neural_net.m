@@ -1,8 +1,8 @@
 %% neural_net.m
 %MAT 128b Project 2
-%Create neural net
+%Create neural net & test it
 clear; clc; close all;
-load W_100_neurons;
+load W_master2;
 
 %% Test the Neural Net
 F = @(NET) 1./(1+exp(-NET));
@@ -15,6 +15,8 @@ disp(['   - Number of HIDDEN layers =            ' num2str(layers)])
 disp(['   - Number of INPUT neurons =            ' num2str(neurons_input)])
 disp(['   - Number of HIDDEN neurons/layer =     ' num2str(neurons_hidden)])
 disp(['   - Number of OUTPUT neurons =           ' num2str(neurons_output)])
+disp(['   - Training rate =                      ' num2str(trainingRate)])
+disp(['   - Number of training images used =     ' num2str(inputSize)])
 fprintf(' \nTesting....\n');
 
 for digit = 0:9
@@ -54,5 +56,3 @@ for digit = 0:9
     end
 end
 disp(ERROR_avg)
-    
-

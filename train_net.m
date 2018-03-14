@@ -11,7 +11,7 @@ function W = train_net(INPUT, digits, W, layers, trainingRate)
         
         %Get target vector
         TARGET = zeros(1,10);
-        for k = 1:10
+        for k = 1:length(TARGET)
             if k-1 == digits(iter)
                 TARGET(k) = 1;
             end
@@ -31,32 +31,19 @@ function W = train_net(INPUT, digits, W, layers, trainingRate)
         %Calculate ERROR, delta, and w_change at the OUTPUT layer
         ERROR = TARGET - OUT{end};
         delta{length(W)} = OUT{end}.*(1 - OUT{end}).*ERROR;
-        [neurons_j, neurons_k] = size(W{end});
-        for j = 1:neurons_j
-            for k = 1:neurons_k
-                w_change{length(W)}(j,k) = trainingRate*delta{end}(k)*OUT{end-1}(j);
-            end
-        end
+        w_change = trainingRate.*(delta{end}'*OUT{end-1})';
         
         %Get delta for all other layers
         for numLayer = length(W)-1:-1:1
             delta{numLayer} = (delta{numLayer+1}*W{numLayer+1}').*(OUT{numLayer+1}.*(1 - OUT{numLayer+1}));
         end
         
-        %Get w_change for all other layers
+        %Get w_change & apply changes
         for numLayer = 1:length(W)-1
-            [neurons_j, neurons_k] = size(W{numLayer});
-            for j = 1:neurons_j
-                for k = 1:neurons_k
-                    w_change{numLayer}(j,k) = trainingRate*delta{numLayer}(k)*OUT{numLayer}(j);
-                end
-            end
+            W{numLayer} = W{numLayer} + trainingRate.*(delta{numLayer}'*OUT{numLayer})';
         end
-        
-        %Apply changes
-        for i = 1:length(W)
-            W{i} = W{i} + w_change{i};
-        end
+        W{end} = W{end} + w_change;
+
         
         %Output training progress
         if mod(iter,500) == 0
