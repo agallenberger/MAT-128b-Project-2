@@ -6,9 +6,9 @@ load mnistdata;
 
 %% Initialize neural net parameters
 layers = 1;               %number of hidden layers [1,inf)
-neurons_hidden = 10;      %number of neurons per hidden layer
+neurons_hidden = 3;      %number of neurons per hidden layer
 trainingRate = .1;       %within the interval [0.1, 0.01]
-inputSize = 60000;         %number of digit image samples in the input
+inputSize = 100000;         %number of digit image samples in the input
 
 %Things you can't change
 neurons_input = 784;      %number of neurons in the input layer
@@ -34,6 +34,7 @@ train{9} = train8;
 train{10} = train9;
 
 %% Initialize the input and train the neural net
+disp('Initializing...');
 INPUT = zeros(inputSize, 784);
 digits = [0 1 2 3 4 5 6 7 8 9];
 digits = repmat(digits,1,inputSize/10);
@@ -41,6 +42,7 @@ for i = 1:inputSize
     INPUT(i,:) = train{digits(i)+1}(ceil(rand()*5400),:);
 end
 W = train_net(INPUT, digits, W, layers, trainingRate);
+clc;
 
 %% Save weight matrices in .mat files
 filename = 'W_master.mat';
