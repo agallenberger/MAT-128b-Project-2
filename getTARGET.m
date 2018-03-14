@@ -3,8 +3,9 @@
 %function to retrieve TARGET data
 
 function TARGET = getTARGET(digit)
-
+    
     load mnistdata;
+    
     if digit == 0
         TARGET = mean(train0);
     elseif digit == 1
