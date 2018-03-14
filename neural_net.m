@@ -6,37 +6,32 @@ load mnistdata;
 load W_master;
 
 %% Initialize neural net parameters
-digit = 4;               %select handwritten digit [0,9]
-trainORtest = 0;         %boolean, 1 -> train, 0 -> test
+digit = 0;               %select handwritten digit [0,9]
 
 %% Initialize INPUT data and OUT function
 F = @(NET) 1./(1+exp(-NET));
-INPUT = double(logical(getMNIST(digit, trainORtest)));
+INPUT = double(logical(getMNIST(digit, 0)));
+layers = length(W)-1;
+[iterations,~] = size(INPUT);
+pass = 0;
 
 %% Peform forward pass on input and display results
-%W = getWeight(z);
-
-layers = length(W) - 1;
-[iterations,~] = size(INPUT);
-for i = 1:iterations
-
+for iter = 1:iterations
     %Forward Pass on all layers
-    OUT = INPUT(i,:);
-    OUT_{1} = OUT;
-    for j = 1:layers+1
-        NET = OUT*W{j};
-        OUT = F(NET);
-        OUT_{j+1} = OUT;
+    %Forward Pass on all layers
+    X = INPUT(iter,:);
+    OUT{1} = X;
+    for i = 1:layers+1
+        NET = X*W{i};
+        X = F(NET);
+        OUT{i+1} = X;
+        %weight W{i} of layer(i) produces output OUT{i+1}
     end
-    OUTPUT(i,:) = OUT;
-    maxOUT(i) = max(OUT);
+    OUTPUT(iter,:) = X;
+    [maxOUT, digitOUT] = max(X);
+    if digitOUT-1 == digit
+        pass = pass+1;
+    end
 end
-
-
-for i = 1:max(size(INPUT))
-    [~,d] = max(maxOUT);
-    d = d-1;
-    %disp(['Test #' num2str(i) ', guess = ' num2str(d)])
-end
-%disp(['Expected Digit = ' num2str(digit)])
 OUTPUT
+fprintf('    %2.1f%% success rate\n', 100*pass/iterations);
