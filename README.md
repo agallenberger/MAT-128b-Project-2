@@ -1,2 +1,2 @@
-# MAT-128b-Project-2
-dont steal this code u theef
+# MATLAB Neural Net
+Train the neural net using train_net_main.m, then test it using neural_net.m
